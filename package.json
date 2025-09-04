@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "web":"nx dev web",
-    "api":"nx serve api"
+    "web": "nx dev web",
+    "api": "nx serve api"
   },
   "private": true,
   "dependencies": {
@@ -12,6 +12,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^4.21.2",
+    "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.2",
     "next": "~15.2.4",
     "pg": "^8.16.3",
