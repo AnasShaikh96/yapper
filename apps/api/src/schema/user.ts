@@ -7,17 +7,7 @@ import { z } from 'zod';
 
 
 
-export const notes = pgTable('notes', {
-  id: uuid('id').notNull().primaryKey().defaultRandom(),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-  content: text('content'),
-  title: varchar('title', { length: 255 })
-})
 
-export const notesRelation = relations(notes, ({ one }) => ({
-  user: one(users)
-}))
 
 
 export const users = pgTable('users', {
@@ -41,11 +31,24 @@ export const usersRelation = relations(users, ({ many }) => ({
   notes: many(notes)
 }))
 
+
+export const notes = pgTable('notes', {
+  id: uuid('id').notNull().primaryKey().defaultRandom(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  content: text('content'),
+  title: varchar('title', { length: 255 })
+})
+
+export const notesRelation = relations(notes, ({ one }) => ({
+  user: one(users)
+}))
+
 export const selectUserSchema = createSelectSchema(users, {
   email: schema => schema.regex(/^([\w.%-]+@[a-z0-9.-]+\.[a-z]{2,6})*$/i)
 })
 
-export const newUserSchema = z.object({
+export const newUserSchema = z.object({  
   body: selectUserSchema.pick({
     email: true,
     username: true,

@@ -9,6 +9,7 @@ import cors from "cors"
 import { ApiError, errorHandler } from './utils/ApiError';
 import status from 'http-status';
 import userRoutes from './routes/userRoutes'
+import { pool } from './db/db';
 
 
 const app = express();
@@ -28,7 +29,8 @@ console.log('ehllo getting here')
 
 app.post('/health', async (req, res) => {
 
-  console.log('request body in', req.body)
+  const result = await pool.query('SELECT FROM current_database');
+
 
   return res.status(200).json({
     body: req.body,

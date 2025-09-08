@@ -8,7 +8,6 @@ import { ZodType } from 'zod';
 export const validateBody = (schema: ZodType<any>) => {
     return (req: Request, res: Response, next: NextFunction) => {
 
-        console.log('reaching here', req.body)
 
         try {
             const value = schema.parse(req.body);
@@ -16,7 +15,8 @@ export const validateBody = (schema: ZodType<any>) => {
             req.body = value;
             next();
         } catch (error) {
-            sendResponse(res, status.NOT_FOUND, 'Incomplete Data', null)
+            console.log(' use upar waala error', error)
+            sendResponse(res, status.NOT_FOUND, 'Incomplete Dataaa', null)
         }
 
     }
