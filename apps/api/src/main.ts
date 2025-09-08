@@ -6,8 +6,9 @@
 import express from 'express';
 import * as path from 'path';
 import cors from "cors"
-import ApiError from './utils/ApiError';
+import { ApiError, errorHandler } from './utils/ApiError';
 import status from 'http-status';
+import userRoutes from './routes/userRoutes'
 
 
 const app = express();
@@ -20,17 +21,23 @@ app.use(cors())
 // MIDDLEWARES
 
 
+console.log('ehllo getting here')
+
 // ROUTES
 
+app.use('/api/v1', userRoutes)
 
 // ERRORHANDLERS
 
+
+app.use(errorHandler)
 
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
   next(new ApiError(status.NOT_FOUND, 'Not found'));
 });
+
 
 const port = process.env.PORT || 3333;
 

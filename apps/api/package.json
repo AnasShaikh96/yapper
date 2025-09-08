@@ -38,6 +38,12 @@
         ],
         "executor": "nx:noop"
       },
+      "dev": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "ts-node-dev --respawn --transpile-only apps/api/src/main.ts"
+        }
+      },
       "serve": {
         "continuous": true,
         "executor": "@nx/js:node",

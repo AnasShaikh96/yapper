@@ -12,7 +12,7 @@ export const idParam = z.object({
 const router = express.Router();
 
 router.get('/users', getUsers);
-router.post('/user', validateBody(newUserSchema), createUser);
+router.post('/users', validateBody(newUserSchema), createUser);
 router.get('/users/:id', validateParams(idParam), getUserById);
 router.patch('/users/:id', validateParams(idParam), validateBody(updateUserSchema), updateUser);
 router.delete('/users/:id', validateParams(idParam), deleteUser);

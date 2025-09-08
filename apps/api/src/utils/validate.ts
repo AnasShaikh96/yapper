@@ -7,8 +7,12 @@ import { ZodType } from 'zod';
 
 export const validateBody = (schema: ZodType<any>) => {
     return (req: Request, res: Response, next: NextFunction) => {
+
+        console.log('reaching here', req.body)
+
         try {
             const value = schema.parse(req.body);
+
             req.body = value;
             next();
         } catch (error) {

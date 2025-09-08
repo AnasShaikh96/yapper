@@ -5,7 +5,7 @@ import status from "http-status";
 import catchAsync from "../utils/catchAsync";
 
 
-export const getUserById = catchAsync(async (req: Request, res: Response) => {
+export const getUserById = catchAsync(async (req:Request, res: Response) => {
     const { id } = req.params
     const user = await getUserByIdService(id);
     sendResponse(res, 200, status[status.FOUND], user)
@@ -19,7 +19,12 @@ export const getUsers = catchAsync(async (req: Request, res: Response) => {
 
 
 export const createUser = catchAsync(async (req: Request, res: Response) => {
+
+
     const user = req.body
+    
+    console.log("inside create user", user)
+    
     const newUser = await createUserService(user);
     sendResponse(res, status.CREATED, status[status.CREATED], newUser)
 })

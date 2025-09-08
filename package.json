@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "web": "nx dev web",
-    "api": "nx serve api"
+    "api": "nx dev api"
   },
   "private": true,
   "dependencies": {
@@ -68,6 +68,7 @@
     "jest-environment-jsdom": "^30.0.2",
     "jest-environment-node": "^30.0.2",
     "jest-util": "^30.0.2",
+    "nodemon": "^3.1.10",
     "nx": "21.4.1",
     "postcss": "8.4.38",
     "prettier": "^2.6.2",
@@ -75,6 +76,7 @@
     "tailwindcss": "3.4.3",
     "ts-jest": "^29.4.0",
     "ts-node": "10.9.1",
+    "ts-node-dev": "^2.0.0",
     "tslib": "^2.3.0",
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.29.0",
