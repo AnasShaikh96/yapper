@@ -15,6 +15,7 @@ const app = express();
 
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
+app.use(express.json())
 app.use(cors())
 
 
@@ -24,6 +25,16 @@ app.use(cors())
 console.log('ehllo getting here')
 
 // ROUTES
+
+app.post('/health', async (req, res) => {
+
+  console.log('request body in', req.body)
+
+  return res.status(200).json({
+    body: req.body,
+    message: 'Everything looking alright again'
+  })
+})
 
 app.use('/api/v1', userRoutes)
 

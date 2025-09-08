@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "web": "nx dev web",
-    "api": "nx dev api"
+    "api": "nx serve api"
   },
   "private": true,
   "dependencies": {
