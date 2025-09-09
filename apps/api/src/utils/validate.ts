@@ -1,9 +1,7 @@
 
 import type { Request, Response, NextFunction } from 'express'
 import { sendResponse } from './response';
-import status from 'http-status';
 import { ZodType } from 'zod';
-import { ApiError, errorHandler } from './ApiError';
 
 export const validateBody = (schema: ZodType<any>) => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -12,23 +10,25 @@ export const validateBody = (schema: ZodType<any>) => {
 
         if (value.error) {
             sendResponse(res, 404, 'Zod Error in Validate.ts', value.error.flatten().fieldErrors.body)
+        } else if (value.success) {
+            req.body = value.data.body;
+            next()
         }
-
-        req.body = value.data.body;
-        next()
     }
 }
 
 export const validateParams = (schema: ZodType<any>) => {
-    return (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const value = schema.parse(req.params);
-            req.params = value;
-            next();
-        } catch (error) {
-            sendResponse(res, status.UNAUTHORIZED, 'User Id not found', null)
-        }
 
+    return async (req: Request, res: Response, next: NextFunction) => {
+
+        const value = schema.safeParse({ body: req.params });
+
+        if (value.error) {
+            sendResponse(res, 404, 'Zod Error in Validate.ts', value.error.flatten().fieldErrors.body)
+        } else if (value.success) {
+            req.params = value.data.body;
+            next()
+        }
     }
 }
 

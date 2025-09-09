@@ -45,18 +45,12 @@ export const errorHandler = (err: unknown, req: Request, res: Response, next: Ne
 
   console.log('inside the error module', isAppError,  JSON.stringify(err))
 
-  const details = err instanceof DrizzleQueryError ? err ?? 'Something went wrong!' : undefined
+  const details = err instanceof DrizzleQueryError ? err?.cause?.detail ?? 'Something went wrong!' : undefined
   res.status(status).json({
     status,
     message,
     ...(details ? { details } : {}),
   })
-
-
-  // res.status(500).json({
-  //   message:'Im centralized error thrower',
-  //   err
-  // })
 
 }
 

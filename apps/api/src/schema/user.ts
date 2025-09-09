@@ -40,7 +40,7 @@ export const notesRelation = relations(notes, ({ one }) => ({
 }))
 
 export const selectUserSchema = createSelectSchema(users, {
-  email: schema => schema.regex(/^([\w.%-]+@[a-z0-9.-]+\.[a-z]{2,6})*$/i, {error:'Invalid Email'})
+  email: schema => schema.regex(/^([\w.%-]+@[a-z0-9.-]+\.[a-z]{2,6})*$/i, { error: 'Invalid Email' })
 })
 
 export const newUserSchema = z.object({
@@ -51,6 +51,13 @@ export const newUserSchema = z.object({
   })
 })
 
+
+export const userByIdSchema = z.object({
+  body: selectUserSchema.pick({
+    id: true
+  })
+})
+
 // export const newUserSchema = z.object({
 //   ...(selectUserSchema.pick({
 //      email: true,
@@ -58,7 +65,7 @@ export const newUserSchema = z.object({
 //      password: true
 //    }))
 //  })
- 
+
 
 // console.log("parse test", newUserSchema.parse({email:'sometgin', username:'hhh', password:'123434'}))
 
