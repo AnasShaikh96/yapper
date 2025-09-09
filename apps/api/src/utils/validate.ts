@@ -1,6 +1,5 @@
 
 import type { Request, Response, NextFunction } from 'express'
-import { ZodSchema, ZodTypeDef } from 'zod/v3'
 import { sendResponse } from './response';
 import status from 'http-status';
 import { ZodType } from 'zod';
@@ -8,17 +7,15 @@ import { ZodType } from 'zod';
 export const validateBody = (schema: ZodType<any>) => {
     return (req: Request, res: Response, next: NextFunction) => {
 
+        const value = schema.safeParse({ body: req.body });
 
-        try {
-            const value = schema.parse(req.body);
-
-            req.body = value;
-            next();
-        } catch (error) {
-            console.log(' use upar waala error', error)
-            sendResponse(res, status.NOT_FOUND, 'Incomplete Dataaa', null)
+        if (value.error) {
+            console.log('zod error', value.error);
+            sendResponse(res, 404, 'Zod Error in Validate.ts', value.error.message)
         }
 
+        req.body = value;
+        next()
     }
 }
 

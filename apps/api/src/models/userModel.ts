@@ -20,7 +20,7 @@ export const createUserService = async (user: NewUser) => {
 
     const createdUser = await db.insert(users).values({
         email, username, password
-    })
+    }).returning()
 
     return createdUser;
 }

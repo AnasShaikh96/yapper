@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
+import { DrizzleQueryError } from 'drizzle-orm';
 
 class ApiError extends Error {
   public statusCode: number;
@@ -43,9 +44,9 @@ export const errorHandler = (err: unknown, req: Request, res: Response, next: Ne
   const message = isAppError ? err.message : 'Something went wrong!'
 
 
-  console.log(err)
+  console.log('inside the error module', isAppError,  err)
 
-  const details = err instanceof Error ? err.message : undefined
+  const details = err instanceof DrizzleQueryError ? err ?? 'Something went wrong!' : undefined
   res.status(status).json({
     status,
     message,
