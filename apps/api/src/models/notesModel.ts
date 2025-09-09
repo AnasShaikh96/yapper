@@ -19,8 +19,10 @@ export const getAllNotesService = async (userId: string) => {
 
 
 export const createNoteService = async (userId: string, note: Note) => {
+    const { title, content } = note;
     const createNote = await db.insert(notes).values({
-        ...note,
+        title,
+        content,
         userId: userId
     }).returning();
 

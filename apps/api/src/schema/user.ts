@@ -56,11 +56,14 @@ export const userByIdSchema = z.object({
 })
 
 
-const selectedNotesSchema = createSelectSchema(notes);
+const selectedNotesSchema = createSelectSchema(notes, {
+  title: z.string().optional()
+});
 
 export const newNotesSchema = z.object({
   body: selectedNotesSchema.pick({
     content: true,
+    title: true
   })
 })
 

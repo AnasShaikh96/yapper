@@ -3,7 +3,6 @@ import { createNote, deleteNoteById, getAllNotes, getNoteById, updateNoteById } 
 import { validateBody, validateParams } from '../utils/validate';
 import { newNotesSchema, userByIdSchema } from '../schema/user';
 
-
 const router = express.Router();
 
 router.get('/notes', getAllNotes)
