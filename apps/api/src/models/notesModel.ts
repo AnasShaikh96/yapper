@@ -1,4 +1,4 @@
-import { eq, not } from "drizzle-orm"
+import { eq } from "drizzle-orm"
 import { db } from "../db/db"
 import { Note, notes } from "../schema/user"
 import { ApiError } from "../utils/ApiError";

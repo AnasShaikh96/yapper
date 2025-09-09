@@ -55,6 +55,15 @@ export const userByIdSchema = z.object({
   })
 })
 
+
+const selectedNotesSchema = createSelectSchema(notes);
+
+export const newNotesSchema = z.object({
+  body: selectedNotesSchema.pick({
+    content: true,
+  })
+})
+
 // export const newUserSchema = z.object({
 //   ...(selectUserSchema.pick({
 //      email: true,
