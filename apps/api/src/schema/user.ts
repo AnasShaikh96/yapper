@@ -5,11 +5,6 @@ import { createSelectSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
 
-
-
-
-
-
 export const users = pgTable('users', {
   id: uuid('id').notNull().primaryKey().defaultRandom(),
   username: varchar('username', { length: 255 }).notNull().unique(),
@@ -45,16 +40,34 @@ export const notesRelation = relations(notes, ({ one }) => ({
 }))
 
 export const selectUserSchema = createSelectSchema(users, {
-  email: schema => schema.regex(/^([\w.%-]+@[a-z0-9.-]+\.[a-z]{2,6})*$/i)
+  email: schema => schema.regex(/^([\w.%-]+@[a-z0-9.-]+\.[a-z]{2,6})*$/i, { error: 'Invalid Email' })
 })
 
-export const newUserSchema = z.object({  
+export const newUserSchema = z.object({
   body: selectUserSchema.pick({
     email: true,
     username: true,
     password: true
   })
 })
+
+
+export const userByIdSchema = z.object({
+  body: selectUserSchema.pick({
+    id: true
+  })
+})
+
+// export const newUserSchema = z.object({
+//   ...(selectUserSchema.pick({
+//      email: true,
+//      username: true,
+//      password: true
+//    }))
+//  })
+
+
+// console.log("parse test", newUserSchema.parse({email:'sometgin', username:'hhh', password:'123434'}))
 
 // export const selectUserSchema = createSelectSchema(users, {
 //   email: schema => schema.regex(/^([\w.%-]+@[a-z0-9.-]+\.[a-z]{2,6})*$/i)
@@ -88,7 +101,7 @@ export const newUserSchema = z.object({
 //   }),
 // });
 
-export const updateUserSchema = z.object({
+const updateUserSchema = z.object({
   body: selectUserSchema
     .pick({
       name: true,
@@ -110,4 +123,4 @@ export type User = InferSelectModel<typeof users>;
 export type Note = InferSelectModel<typeof notes>
 export type NewUser = z.infer<typeof newUserSchema>['body']
 // export type NewUser = z.infer<typeof newUserSchema>['body'];
-// export type UpdateUser = z.infer<typeof updateUserSchema>['body'];
+export type UpdateUser = z.infer<typeof updateUserSchema>['body'];

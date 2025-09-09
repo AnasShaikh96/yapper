@@ -22,9 +22,6 @@ app.use(cors())
 
 // MIDDLEWARES
 
-
-console.log('ehllo getting here')
-
 // ROUTES
 
 app.post('/health', async (req, res) => {
@@ -41,7 +38,6 @@ app.post('/health', async (req, res) => {
 app.use('/api/v1', userRoutes)
 
 // ERRORHANDLERS
-
 
 app.use(errorHandler)
 
