@@ -3,18 +3,18 @@ import type { Request, Response, NextFunction } from 'express'
 import { sendResponse } from './response';
 import status from 'http-status';
 import { ZodType } from 'zod';
+import { ApiError, errorHandler } from './ApiError';
 
 export const validateBody = (schema: ZodType<any>) => {
-    return (req: Request, res: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
 
         const value = schema.safeParse({ body: req.body });
 
         if (value.error) {
-            console.log('zod error', value.error);
-            sendResponse(res, 404, 'Zod Error in Validate.ts', value.error.message)
+            sendResponse(res, 404, 'Zod Error in Validate.ts', value.error.flatten().fieldErrors.body)
         }
 
-        req.body = value;
+        req.body = value.data.body;
         next()
     }
 }

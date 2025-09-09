@@ -39,12 +39,11 @@ export class AppError extends Error {
 }
 
 export const errorHandler = (err: unknown, req: Request, res: Response, next: NextFunction) => {
-  const isAppError = err instanceof AppError
+  const isAppError = err instanceof ApiError
   const status = isAppError ? err.statusCode : 500
   const message = isAppError ? err.message : 'Something went wrong!'
 
-
-  console.log('inside the error module', isAppError,  err)
+  console.log('inside the error module', isAppError,  JSON.stringify(err))
 
   const details = err instanceof DrizzleQueryError ? err ?? 'Something went wrong!' : undefined
   res.status(status).json({
@@ -52,6 +51,13 @@ export const errorHandler = (err: unknown, req: Request, res: Response, next: Ne
     message,
     ...(details ? { details } : {}),
   })
+
+
+  // res.status(500).json({
+  //   message:'Im centralized error thrower',
+  //   err
+  // })
+
 }
 
 

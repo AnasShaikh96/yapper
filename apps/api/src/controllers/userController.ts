@@ -20,10 +20,9 @@ export const getUsers = catchAsync(async (req: Request, res: Response) => {
 
 export const createUser = catchAsync(async (req: Request, res: Response) => {
 
-
-    const user = req.body    
+    const user = req.body;
     const newUser = await createUserService(user);
-    sendResponse(res, status.CREATED, status[status.CREATED], newUser.rows[0])
+    sendResponse(res, status.CREATED, status[status.CREATED], newUser)
 })
 
 export const updateUser = catchAsync(async (req: Request, res: Response) => {

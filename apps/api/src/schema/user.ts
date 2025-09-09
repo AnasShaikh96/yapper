@@ -40,7 +40,7 @@ export const notesRelation = relations(notes, ({ one }) => ({
 }))
 
 export const selectUserSchema = createSelectSchema(users, {
-  email: schema => schema.regex(/^([\w.%-]+@[a-z0-9.-]+\.[a-z]{2,6})*$/i).catch('Email is invalid')
+  email: schema => schema.regex(/^([\w.%-]+@[a-z0-9.-]+\.[a-z]{2,6})*$/i, {error:'Invalid Email'})
 })
 
 export const newUserSchema = z.object({
