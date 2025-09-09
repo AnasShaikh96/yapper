@@ -10,13 +10,6 @@ export const users = pgTable('users', {
   username: varchar('username', { length: 255 }).notNull().unique(),
   password: text('password').notNull(),
   email: text('email').unique(),
-
-
-  // notes:  ,
-  // isAdmin: boolean('is_admin').notNull().default(false),
-  // isVerified: boolean('is_verified').notNull().default(false),
-  // salt: text('salt').notNull(),
-  // code: text('code').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
@@ -32,11 +25,15 @@ export const notes = pgTable('notes', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   content: text('content'),
-  title: varchar('title', { length: 255 })
+  title: varchar('title', { length: 255 }),
+  userId: uuid('user_id').notNull().references(() => users.id)
 })
 
 export const notesRelation = relations(notes, ({ one }) => ({
-  user: one(users)
+  user: one(users, {
+    fields: [notes.userId],
+    references: [users.id]
+  })
 }))
 
 export const selectUserSchema = createSelectSchema(users, {

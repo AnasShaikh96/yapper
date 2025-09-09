@@ -8,7 +8,9 @@ import * as path from 'path';
 import cors from "cors"
 import { ApiError, errorHandler } from './utils/ApiError';
 import status from 'http-status';
-import userRoutes from './routes/userRoutes'
+
+import userRoutes from './routes/userRoutes';
+import notesRoutes from './routes/notesRoutes';
 import { pool } from './db/db';
 
 
@@ -36,6 +38,7 @@ app.post('/health', async (req, res) => {
 })
 
 app.use('/api/v1', userRoutes)
+app.use('/api/v1', notesRoutes)
 
 // ERRORHANDLERS
 
