@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import { createUserService, deleteUserByIdService, getUserByIdService, getUserByKeyVal, getUsersService, updateUserByIdService } from "../models/userModel"
+import { createUserService, deleteUserByIdService, getUserByIdService, getUserByKeyVal, updateUserByIdService } from "../models/userModel"
 import { sendResponse } from "../utils/response";
 import status from "http-status";
 import catchAsync from "../utils/catchAsync";
@@ -19,22 +19,24 @@ export const loginUser = catchAsync(async (req: Request, res: Response) => {
 
     if (user.length === 0) throw new ApiError(404, 'User with email does not exists');
 
-    const hashedPassword = user[0].password;
-    const comparePassword = await bcrypt.compare(password, hashedPassword);
+    const storedUser = user[0];
+    const comparePassword = await bcrypt.compare(password, storedUser.password);
 
     if (!comparePassword) throw new ApiError(400, 'Password does not match!');
 
+    const accessToken = generateToken(storedUser, '1d');
+    const refreshToken = generateToken(storedUser, '6m');
 
-    const accessToken = generateToken(email, '1d');
-    const refreshToken = generateToken(email, '6m');
-
-    res.status(200).json({
-        status: 200,
-        message: 'User Logged in Successfully!',
-        data: user,
-    }).cookie('accessToken', accessToken, config.cookieOptions)
-        .cookie('refreshToken', refreshToken, config.cookieOptions);
-
+    res.status(200)
+        .cookie('accessToken', accessToken, config.cookieOptions)
+        .cookie('refreshToken', refreshToken, config.cookieOptions)
+        .json({
+            status: 200,
+            message: 'User Logged in Successfully!',
+            data: user,
+            accessToken,
+            refreshToken
+        })
 })
 
 
@@ -49,7 +51,9 @@ export const getUserById = catchAsync(async (req: Request, res: Response) => {
 
 
 export const getUsers = catchAsync(async (req: Request, res: Response) => {
-    const user = await getUsersService();
+
+    const loggedInUser = req.user;
+    const user = await getUserByIdService(loggedInUser.id)
     sendResponse(res, 200, status[status.FOUND], user)
 })
 
