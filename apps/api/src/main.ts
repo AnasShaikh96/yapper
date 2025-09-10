@@ -8,6 +8,7 @@ import * as path from 'path';
 import cors from "cors"
 import { ApiError, errorHandler } from './utils/ApiError';
 import status from 'http-status';
+import cookieParser from 'cookie-parser'
 
 import userRoutes from './routes/userRoutes';
 import notesRoutes from './routes/notesRoutes';
@@ -20,6 +21,7 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 app.use(express.json())
 app.use(cors())
+app.use(cookieParser())
 
 
 // MIDDLEWARES

@@ -4,6 +4,38 @@ import { sendResponse } from "../utils/response";
 import status from "http-status";
 import catchAsync from "../utils/catchAsync";
 import { ApiError } from "../utils/ApiError";
+import { generateToken } from "../utils/auth";
+import { config } from "../utils/config";
+const bcrypt = require('bcrypt');
+
+
+
+export const loginUser = catchAsync(async (req: Request, res: Response) => {
+
+    const { email, password } = req.body;
+
+
+    const user = await getUserByKeyVal('email', email);
+
+    if (user.length === 0) throw new ApiError(404, 'User with email does not exists');
+
+    const hashedPassword = user[0].password;
+    const comparePassword = await bcrypt.compare(password, hashedPassword);
+
+    if (!comparePassword) throw new ApiError(400, 'Password does not match!');
+
+
+    const accessToken = generateToken(email, '1d');
+    const refreshToken = generateToken(email, '6m');
+
+    res.status(200).json({
+        status: 200,
+        message: 'User Logged in Successfully!',
+        data: user,
+    }).cookie('accessToken', accessToken, config.cookieOptions)
+        .cookie('refreshToken', refreshToken, config.cookieOptions);
+
+})
 
 
 export const getUserById = catchAsync(async (req: Request, res: Response) => {
