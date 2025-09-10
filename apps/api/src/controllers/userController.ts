@@ -24,8 +24,8 @@ export const loginUser = catchAsync(async (req: Request, res: Response) => {
 
     if (!comparePassword) throw new ApiError(400, 'Password does not match!');
 
-    const accessToken = generateToken(storedUser, '1d');
-    const refreshToken = generateToken(storedUser, '6m');
+    const { accessToken, refreshToken } = generateToken(storedUser);
+    
 
     res.status(200)
         .cookie('accessToken', accessToken, config.cookieOptions)
@@ -62,9 +62,6 @@ export const createUser = catchAsync(async (req: Request, res: Response) => {
     const user = req.body;
 
     const checkUserMail = await getUserByKeyVal('email', user.email);
-
-
-    console.log("checkUserMail", checkUserMail)
 
     if (checkUserMail.length !== 0) {
         throw new ApiError(400, 'Email already exists',)

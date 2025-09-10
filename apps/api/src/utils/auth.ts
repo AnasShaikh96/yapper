@@ -2,30 +2,33 @@ import type { Request, Response, NextFunction } from 'express'
 import { config } from './config';
 import { User } from '../schema/user';
 import { ApiError } from './ApiError';
-
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 
 
 export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
-
     try {
-        const { accessToken, refreshToken } = req.cookies;
-        const decodeAccessToken = jwt.verify(accessToken, config.jwt_secret);
-        // const decodeRefreshToken = jwt.verify(refreshToken, config.jwt_secret);
+        const { accessToken } = req.cookies;
+        jwt.verify(accessToken, config.jwt_secret, function (err, decoded) {
+            if (err) {
+                res.status(401).json({
+                    status: 401,
+                    message: 'Auth Token Expired',
+                })
+            } else {
+                req.user = decoded
+                next();
+            }
+        });
 
-        req.user = decodeAccessToken;
-
-        next()
     } catch (error) {
         throw new ApiError(401, 'Invalid or Unauthorized Token');
     }
 }
 
-export const generateToken = (user: User, expTime: string) => {
+export const generateToken = (user: User) => {
 
+    const accessToken = jwt.sign(user, config.jwt_secret, { expiresIn: '1d' });
+    const refreshToken = jwt.sign(user, config.jwt_secret, { expiresIn: '1y' });
 
-    const encodedToken = jwt.sign(user, config.jwt_secret, { expiresIn: expTime });
-
-    // console.log("jwt token", encodedToken)
-    return encodedToken
+    return { accessToken, refreshToken }
 }
