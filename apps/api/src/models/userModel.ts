@@ -2,6 +2,13 @@ import { eq } from "drizzle-orm"
 import { db } from "../db/db"
 import { NewUser, User, users } from "../schema/user"
 
+
+export const getUserByKeyVal = async <k extends keyof User>(key: k, value: string) => {
+    const user = await db.select().from(users).where(eq(users[key], value))
+    return user
+}
+
+
 export const getUserByIdService = async (userId: string) => {
     const user = await db.select().from(users).where(eq(users.id, userId))
     return user
@@ -15,6 +22,7 @@ export const getUsersService = async () => {
 export const createUserService = async (user: NewUser) => {
 
     const { email, username, password } = user;
+    
 
     const createdUser = await db.insert(users).values({
         email, username, password

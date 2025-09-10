@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm"
 import { db } from "../db/db"
-import { Note, notes } from "../schema/user"
+import { Note, notes } from "../schema/notes"
 import { ApiError } from "../utils/ApiError";
 
 

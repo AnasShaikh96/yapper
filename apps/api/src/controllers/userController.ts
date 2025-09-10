@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import { createUserService, deleteUserByIdService, getUserByIdService, getUsersService, updateUserByIdService } from "../models/userModel"
+import { createUserService, deleteUserByIdService, getUserByIdService, getUserByKeyVal, getUsersService, updateUserByIdService } from "../models/userModel"
 import { sendResponse } from "../utils/response";
 import status from "http-status";
 import catchAsync from "../utils/catchAsync";
@@ -24,6 +24,22 @@ export const getUsers = catchAsync(async (req: Request, res: Response) => {
 
 export const createUser = catchAsync(async (req: Request, res: Response) => {
     const user = req.body;
+
+    const checkUserMail = await getUserByKeyVal('email', user.email);
+
+
+    console.log("checkUserMail", checkUserMail)
+
+    if (checkUserMail.length !== 0) {
+        throw new ApiError(400, 'Email already exists',)
+    }
+
+    const checkUserName = await getUserByKeyVal('username', user.username);
+
+    if (checkUserName.length !== 0) {
+        throw new ApiError(400, 'Username is already taken')
+    }
+
     const newUser = await createUserService(user);
     sendResponse(res, status.CREATED, status[status.CREATED], newUser)
 })

@@ -3,6 +3,7 @@ import { relations } from 'drizzle-orm';
 import { pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createSelectSchema } from 'drizzle-zod';
 import { z } from 'zod';
+import { notes } from './notes';
 
 
 export const users = pgTable('users', {
@@ -19,22 +20,6 @@ export const usersRelation = relations(users, ({ many }) => ({
   notes: many(notes)
 }))
 
-
-export const notes = pgTable('notes', {
-  id: uuid('id').notNull().primaryKey().defaultRandom(),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-  content: text('content'),
-  title: varchar('title', { length: 255 }),
-  userId: uuid('user_id').notNull().references(() => users.id)
-})
-
-export const notesRelation = relations(notes, ({ one }) => ({
-  user: one(users, {
-    fields: [notes.userId],
-    references: [users.id]
-  })
-}))
 
 export const selectUserSchema = createSelectSchema(users, {
   email: schema => schema.regex(/^([\w.%-]+@[a-z0-9.-]+\.[a-z]{2,6})*$/i, { error: 'Invalid Email' })
@@ -55,27 +40,6 @@ export const userByIdSchema = z.object({
   })
 })
 
-
-const selectedNotesSchema = createSelectSchema(notes, {
-  title: z.string().optional()
-});
-
-export const newNotesSchema = z.object({
-  body: selectedNotesSchema.pick({
-    content: true,
-    title: true
-  })
-})
-
-// export const newUserSchema = z.object({
-//   ...(selectUserSchema.pick({
-//      email: true,
-//      username: true,
-//      password: true
-//    }))
-//  })
-
-
 // console.log("parse test", newUserSchema.parse({email:'sometgin', username:'hhh', password:'123434'}))
 
 // export const selectUserSchema = createSelectSchema(users, {
@@ -95,12 +59,12 @@ export const newNotesSchema = z.object({
 //   }),
 // });
 
-// export const loginSchema = z.object({
-//   body: selectUserSchema.pick({
-//     email: true,
-//     password: true,
-//   }),
-// });
+export const loginSchema = z.object({
+  body: selectUserSchema.pick({
+    email: true,
+    password: true,
+  }),
+});
 
 // export const addUserSchema = z.object({
 //   body: selectUserSchema.pick({
@@ -129,7 +93,6 @@ const updateUserSchema = z.object({
 // });
 
 export type User = InferSelectModel<typeof users>;
-export type Note = InferSelectModel<typeof notes>
 export type NewUser = z.infer<typeof newUserSchema>['body']
 // export type NewUser = z.infer<typeof newUserSchema>['body'];
 export type UpdateUser = z.infer<typeof updateUserSchema>['body'];
