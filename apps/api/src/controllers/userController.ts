@@ -11,9 +11,7 @@ const bcrypt = require('bcrypt');
 
 
 export const loginUser = catchAsync(async (req: Request, res: Response) => {
-
     const { email, password } = req.body;
-
 
     const user = await getUserByKeyVal('email', email);
 
@@ -25,7 +23,7 @@ export const loginUser = catchAsync(async (req: Request, res: Response) => {
     if (!comparePassword) throw new ApiError(400, 'Password does not match!');
 
     const { accessToken, refreshToken } = generateToken(storedUser);
-    
+
 
     res.status(200)
         .cookie('accessToken', accessToken, config.cookieOptions)
@@ -51,7 +49,6 @@ export const getUserById = catchAsync(async (req: Request, res: Response) => {
 
 
 export const getUsers = catchAsync(async (req: Request, res: Response) => {
-
     const loggedInUser = req.user;
     const user = await getUserByIdService(loggedInUser.id)
     sendResponse(res, 200, status[status.FOUND], user)
@@ -78,7 +75,8 @@ export const createUser = catchAsync(async (req: Request, res: Response) => {
 })
 
 export const updateUser = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const loggedInUser = req.user;
+    const id = loggedInUser.id
     const user = req.body;
 
     const updateUser = await updateUserByIdService(user, id);
@@ -86,10 +84,48 @@ export const updateUser = catchAsync(async (req: Request, res: Response) => {
 })
 
 export const deleteUser = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params
-    const user = await deleteUserByIdService(id);
+    const loggedInUser = req.user
+    const user = await deleteUserByIdService(loggedInUser.id);
 
     if (!user) throw new ApiError(404, 'User with given ID cannot be found!')
 
     sendResponse(res, 200, status[200], user)
 })
+
+
+
+export const verifyUserEmail = catchAsync(async (req: Request, res: Response) => {
+    const { email } = req.body;
+    const user = await getUserByKeyVal('email', email);
+    if (user.length === 0) throw new ApiError(404, 'User with given email not found')
+
+    sendResponse(res, 200, 'User Email verified')
+})
+
+export const verifyUserToken = catchAsync(async (req: Request, res: Response) => {
+    const { email, token } = req.body;
+
+    if (!token) throw new ApiError(400, "Token cannot be found");
+
+    const user = await getUserByKeyVal('email', email);
+    if (user.length === 0) throw new ApiError(404, 'User with given email not found')
+
+    sendResponse(res, 200, 'User Email verified')
+})
+
+
+export const updateUserPassword = catchAsync(async (req: Request, res: Response) => {
+
+    const { email, password } = req.body;
+    const user = await getUserByKeyVal('email', email);
+    if (user.length === 0) throw new ApiError(404, 'User with given email not found')
+
+    const updateUser = await updateUserByIdService({
+        ...user[0],
+        password: password
+    }, user[0].id)
+
+
+    sendResponse(res, 200, 'User Password updated', updateUser)
+})
+

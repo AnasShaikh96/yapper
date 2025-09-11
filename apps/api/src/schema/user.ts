@@ -2,7 +2,7 @@ import type { InferSelectModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 import { pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createSelectSchema } from 'drizzle-zod';
-import { z } from 'zod';
+import { email, z } from 'zod';
 import { notes } from './notes';
 
 
@@ -33,31 +33,17 @@ export const newUserSchema = z.object({
   })
 })
 
-
 export const userByIdSchema = z.object({
   body: selectUserSchema.pick({
     id: true
   })
 })
 
-// console.log("parse test", newUserSchema.parse({email:'sometgin', username:'hhh', password:'123434'}))
-
-// export const selectUserSchema = createSelectSchema(users, {
-//   email: schema => schema.regex(/^([\w.%-]+@[a-z0-9.-]+\.[a-z]{2,6})*$/i)
-// });
-
-// export const verifyUserSchema = z.object({
-//   query: selectUserSchema.pick({
-//     email: true,
-//     code: true,
-//   }),
-// });
-
-// export const deleteUserSchema = z.object({
-//   body: selectUserSchema.pick({
-//     email: true,
-//   }),
-// });
+export const verifyUserSchema = z.object({
+  body: selectUserSchema.pick({
+    email: true,
+  })
+})
 
 export const loginSchema = z.object({
   body: selectUserSchema.pick({
@@ -66,13 +52,6 @@ export const loginSchema = z.object({
   }),
 });
 
-// export const addUserSchema = z.object({
-//   body: selectUserSchema.pick({
-//     name: true,
-//     email: true,
-//     password: true,
-//   }),
-// });
 
 const updateUserSchema = z.object({
   body: selectUserSchema
@@ -84,15 +63,25 @@ const updateUserSchema = z.object({
     .partial(),
 });
 
-// export const newUserSchema = z.object({
-//   body: selectUserSchema.pick({
-//     name: true,
-//     email: true,
-//     password: true,
-//   }),
-// });
+
+export const verifyTokenSchema = z.object({
+  body: selectUserSchema.pick({
+    email: true
+  }).extend({
+    token: z.string().or(z.number()).nonoptional()
+  })
+})
+
+
+export const resetPasswordSchema = z.object({
+  body: selectUserSchema.pick({
+    email: true,
+    password: true
+  })
+})
+
+
 
 export type User = InferSelectModel<typeof users>;
 export type NewUser = z.infer<typeof newUserSchema>['body']
-// export type NewUser = z.infer<typeof newUserSchema>['body'];
 export type UpdateUser = z.infer<typeof updateUserSchema>['body'];

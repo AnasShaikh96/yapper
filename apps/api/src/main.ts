@@ -9,10 +9,8 @@ import cors from "cors"
 import { ApiError, errorHandler } from './utils/ApiError';
 import status from 'http-status';
 import cookieParser from 'cookie-parser'
-
 import userRoutes from './routes/userRoutes';
 import notesRoutes from './routes/notesRoutes';
-import { pool } from './db/db';
 
 
 const app = express();
@@ -29,10 +27,6 @@ app.use(cookieParser())
 // ROUTES
 
 app.post('/health', async (req, res) => {
-
-  const result = await pool.query('SELECT FROM current_database');
-
-
   return res.status(200).json({
     body: req.body,
     message: 'Everything looking alright again'

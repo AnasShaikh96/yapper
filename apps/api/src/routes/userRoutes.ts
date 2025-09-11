@@ -1,7 +1,7 @@
 import express from "express";
-import { createUser, deleteUser, getUserById, getUsers, loginUser, updateUser } from "../controllers/userController";
-import { validateBody, validateParams } from "../utils/validate";
-import { newUserSchema, userByIdSchema } from "../schema/user";
+import { createUser, deleteUser, getUsers, loginUser, updateUser, updateUserPassword, verifyUserEmail, verifyUserToken } from "../controllers/userController";
+import { validateBody } from "../utils/validate";
+import { newUserSchema, resetPasswordSchema, verifyTokenSchema, verifyUserSchema } from "../schema/user";
 import { verifyToken } from "../utils/auth";
 
 
@@ -11,10 +11,14 @@ router.get('/users', verifyToken, getUsers);
 router.post('/users', validateBody(newUserSchema), createUser);
 
 router.post('/login', loginUser)
+// router.post('/refresh', loginUser)
 
+router.post('/verify-user', validateBody(verifyUserSchema), verifyUserEmail)
+router.post('/verify-token', validateBody(verifyTokenSchema), verifyUserToken)
 
-// router.get('/users/:id', validateParams(userByIdSchema), getUserById);
-router.patch('/users/:id', validateParams(userByIdSchema), updateUser);
-router.delete('/users/:id', validateParams(userByIdSchema), deleteUser);
+router.post('/reset-password', validateBody(resetPasswordSchema), updateUserPassword)
+
+router.patch('/users', verifyToken, updateUser);
+router.delete('/users', verifyToken, deleteUser);
 
 export default router
