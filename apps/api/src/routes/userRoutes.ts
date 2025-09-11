@@ -11,7 +11,6 @@ router.get('/users', verifyToken, getUsers);
 router.post('/users', validateBody(newUserSchema), createUser);
 
 router.post('/login', loginUser)
-// router.post('/refresh', loginUser)
 
 router.post('/verify-user', validateBody(verifyUserSchema), verifyUserEmail)
 router.post('/verify-token', validateBody(verifyTokenSchema), verifyUserToken)
