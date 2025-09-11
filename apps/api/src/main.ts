@@ -36,15 +36,14 @@ app.post('/health', async (req, res) => {
 app.use('/api/v1', userRoutes)
 app.use('/api/v1', notesRoutes)
 
-// ERRORHANDLERS
-
-app.use(errorHandler)
-
-
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
-  next(new ApiError(status.NOT_FOUND, 'Not found'));
+  res.send('Error connecting')
+  // next(new ApiError(status.NOT_FOUND, 'Not found'));
 });
+
+// ERRORHANDLERS
+app.use(errorHandler)
 
 
 const port = process.env.PORT || 3333;
