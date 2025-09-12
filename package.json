@@ -7,11 +7,13 @@
     "api": "nx serve api",
     "build-api": "npx nx run api:build:production",
     "build-start": "nx reset && npx nx run api:serve --configuration=production",
-    "build-web":"npx nx run web:build:production"
+    "build-web": "npx nx run web:build:production"
   },
   "private": true,
   "dependencies": {
     "@lexical/react": "^0.35.0",
+    "@radix-ui/react-navigation-menu": "^1.2.14",
+    "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-slot": "^1.2.3",
     "axios": "^1.6.0",
     "bcrypt": "^6.0.0",

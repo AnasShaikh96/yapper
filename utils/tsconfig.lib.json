@@ -32,6 +32,7 @@
     "src/**/*.js",
     "src/**/*.jsx",
     "src/**/*.ts",
+    "src/*.ts",
     "src/**/*.tsx"
   ]
 }

@@ -13,6 +13,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 
 
 import { Button } from '@yapper/ui';
+import { Navbar01 } from '@yapper/ui/navbar';
 
 
 const theme = {
@@ -56,6 +57,7 @@ export default function Index() {
    */
   return (
     <div>
+      <Navbar01 />
       <Button>Hello</Button>
       <LexicalComposer initialConfig={initialConfig}>
         <RichTextPlugin
