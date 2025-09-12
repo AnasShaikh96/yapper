@@ -1,6 +1,6 @@
 'use client';
 
-import { $getRoot, $getSelection, EditorState } from 'lexical';
+import { EditorState } from 'lexical';
 import { useEffect, useState } from 'react';
 
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
@@ -10,6 +10,9 @@ import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
+
+import { Button } from '@yapper/ui';
 
 
 const theme = {
@@ -31,6 +34,7 @@ export default function Index() {
   // function onChange(editorState) {
   //   setEditorState(editorState);
   // }
+  console.log(editorState)
 
   function onChange(editorState: EditorState) {
     // Call toJSON on the EditorState object, which produces a serialization safe string
@@ -52,6 +56,7 @@ export default function Index() {
    */
   return (
     <div>
+      <Button>Hello</Button>
       <LexicalComposer initialConfig={initialConfig}>
         <RichTextPlugin
           contentEditable={
@@ -71,7 +76,7 @@ export default function Index() {
 }
 
 
-function MyOnChangePlugin({ onChange }: { onChange: React.ChangeEvent<HTMLElement> }) {
+function MyOnChangePlugin({ onChange }: { onChange: (editorState: EditorState) => void }) {
   // Access the editor through the LexicalComposerContext
   const [editor] = useLexicalComposerContext();
   // Wrap our listener in useEffect to handle the teardown and avoid stale references.

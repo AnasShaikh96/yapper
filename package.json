@@ -6,7 +6,8 @@
     "web": "nx dev web",
     "api": "nx serve api",
     "build-api": "npx nx run api:build:production",
-    "build-start": "nx reset && npx nx run api:serve --configuration=production"
+    "build-start": "nx reset && npx nx run api:serve --configuration=production",
+    "build-web":"npx nx run web:build:production"
   },
   "private": true,
   "dependencies": {
