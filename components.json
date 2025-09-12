@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": false,
+  "tailwind": {
+    "config": "utils/src/tailwind.config.ts",
+    "css": "utils/src/global.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "aliases": {
+    "ui": "@yapper/ui",
+    "components": "@yapper/ui/components",
+    "utils": "@yapper/utils",
+    "hooks": "@yapper/ui/hooks"
+  }
+}

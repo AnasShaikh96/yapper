@@ -11,9 +11,6 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
-// import {useLexicalComposerContext} from '@lexical/react/useconetex÷'
-
-
 
 const theme = {
   // Theme styling goes here
@@ -59,8 +56,8 @@ export default function Index() {
         <RichTextPlugin
           contentEditable={
             <ContentEditable
-              aria-placeholder={'Enter some text...'}
-              placeholder={<div>Enter some text...</div>}
+              aria-placeholder={'Start yapping...'}
+              placeholder={<div>Start yapping...</div>}
             />
           }
           ErrorBoundary={LexicalErrorBoundary}
