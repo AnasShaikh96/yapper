@@ -11,6 +11,7 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { Button } from '@/components/ui/button';
+import { DashboardLayout } from '@/components/ui/dashboard-layout';
 
 const theme = {
   // Theme styling goes here
@@ -49,23 +50,25 @@ export default function Index() {
    * Note: The corresponding styles are in the ./index.tailwind file.
    */
   return (
-    <div>
-      <Button>Hello</Button>
-      <LexicalComposer initialConfig={initialConfig}>
-        <RichTextPlugin
-          contentEditable={
-            <ContentEditable
-              aria-placeholder={'Enter some text...'}
-              placeholder={<div>Enter some text...</div>}
-            />
-          }
-          ErrorBoundary={LexicalErrorBoundary}
-        />
-        <HistoryPlugin />
-        <AutoFocusPlugin />
-        <MyOnChangePlugin onChange={onChange} />
-      </LexicalComposer>
-    </div>
+    <DashboardLayout>
+      <div>
+        <Button>Hello</Button>
+        <LexicalComposer initialConfig={initialConfig}>
+          <RichTextPlugin
+            contentEditable={
+              <ContentEditable
+                aria-placeholder={'Enter some text...'}
+                placeholder={<div>Enter some text...</div>}
+              />
+            }
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+          <HistoryPlugin />
+          <AutoFocusPlugin />
+          <MyOnChangePlugin onChange={onChange} />
+        </LexicalComposer>
+      </div>
+    </DashboardLayout>
   );
 }
 

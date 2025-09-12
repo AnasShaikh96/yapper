@@ -1,0 +1,127 @@
+"use client"
+
+import { useState } from "react"
+import { Home, Users, BarChart3, Settings, FileText, ChevronLeft, ChevronRight, X } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
+
+interface SidebarProps {
+    isOpen: boolean
+    onClose: () => void
+    isMobile: boolean
+}
+
+const sidebarItems = [
+    {
+        title: "Dashboard",
+        icon: Home,
+        href: "/",
+    },
+    {
+        title: "Users",
+        icon: Users,
+        href: "/users",
+    },
+    {
+        title: "Analytics",
+        icon: BarChart3,
+        href: "/analytics",
+    },
+    {
+        title: "Reports",
+        icon: FileText,
+        href: "/reports",
+    },
+    {
+        title: "Settings",
+        icon: Settings,
+        href: "/settings",
+    },
+]
+
+export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
+    const [isCollapsed, setIsCollapsed] = useState(false)
+
+    const toggleCollapsed = () => {
+        setIsCollapsed(!isCollapsed)
+    }
+
+    if (isMobile) {
+        return (
+            <>
+                {/* Mobile overlay */}
+                {isOpen && <div className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden" onClick={onClose} />}
+
+                {/* Mobile sidebar */}
+                <aside
+                    className={cn(
+                        "fixed left-0 top-0 z-50 h-full w-64 transform bg-sidebar border-r border-gray-300 transition-transform duration-300 ease-in-out md:hidden",
+                        isOpen ? "translate-x-0" : "-translate-x-full",
+                    )}
+                >
+                    <div className="flex h-16 items-center justify-between px-4 border-b border-gray-300">
+                        <span className="text-lg font-semibold text-sidebar-foreground">Menu</span>
+                        <Button variant="ghost" size="icon" onClick={onClose}>
+                            <X className="h-5 w-5" />
+                        </Button>
+                    </div>
+                    <ScrollArea className="flex-1 px-3 py-4">
+                        <nav className="space-y-2">
+                            {sidebarItems.map((item) => (
+                                <a
+                                    key={item.href}
+                                    href={item.href}
+                                    className="flex items-center space-x-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                                    onClick={onClose}
+                                >
+                                    <item.icon className="h-5 w-5" />
+                                    <span>{item.title}</span>
+                                </a>
+                            ))}
+                        </nav>
+                    </ScrollArea>
+                </aside>
+            </>
+        )
+    }
+
+    // Desktop sidebar
+    return (
+        <aside
+            className={cn(
+                "hidden md:flex h-full bg-sidebar border-r border-gray-300 transition-all duration-300 ease-in-out",
+                isCollapsed ? "w-16" : "w-64",
+            )}
+        >
+            <div className="flex flex-col w-full">
+                {/* Collapse toggle */}
+                <div className="flex h-16 items-center justify-end px-4 border-b border-gray-300">
+                    <Button variant="ghost" size="icon" onClick={toggleCollapsed} className="h-8 w-8">
+                        {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+                    </Button>
+                </div>
+
+                {/* Navigation */}
+                <ScrollArea className="flex-1 px-3 py-4">
+                    <nav className="space-y-2">
+                        {sidebarItems.map((item) => (
+                            <a
+                                key={item.href}
+                                href={item.href}
+                                className={cn(
+                                    "flex items-center rounded-lg px-3 py-2 text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                                    isCollapsed ? "justify-center" : "space-x-3",
+                                )}
+                                title={isCollapsed ? item.title : undefined}
+                            >
+                                <item.icon className="h-5 w-5 flex-shrink-0" />
+                                {!isCollapsed && <span>{item.title}</span>}
+                            </a>
+                        ))}
+                    </nav>
+                </ScrollArea>
+            </div>
+        </aside>
+    )
+}
