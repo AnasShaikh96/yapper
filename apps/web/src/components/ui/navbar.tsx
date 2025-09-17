@@ -1,19 +1,21 @@
 'use client';
 
 import * as React from 'react';
-import { Button } from './button';
-import { useEffect, useState, useRef } from 'react';
-import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuList,
-} from './navigation-menu';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from './popover';
 import { cn } from '@/lib/utils';
+import { Button } from './button';
+import { Sun, Moon, User } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useMobile } from '@/hooks/use-mobile';
+import { useSidebar } from '@/components/ui/sidebar-context';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 // Simple logo component for the navbar
 const Logo = (props: React.SVGAttributes<SVGElement>) => {
@@ -71,32 +73,10 @@ const HamburgerIcon = ({ className, ...props }: React.SVGAttributes<SVGElement>)
     </svg>
 );
 
-// Types
-export interface Navbar01NavLink {
-    href: string;
-    label: string;
-    active?: boolean;
-}
-
 export interface Navbar01Props extends React.HTMLAttributes<HTMLElement> {
     logo?: React.ReactNode;
     logoHref?: string;
-    navigationLinks?: Navbar01NavLink[];
-    signInText?: string;
-    signInHref?: string;
-    ctaText?: string;
-    ctaHref?: string;
-    onSignInClick?: () => void;
-    onCtaClick?: () => void;
 }
-
-// Default navigation links
-const defaultNavigationLinks: Navbar01NavLink[] = [
-    { href: '#', label: 'Home', active: true },
-    { href: '#features', label: 'Features' },
-    { href: '#pricing', label: 'Pricing' },
-    { href: '#about', label: 'About' },
-];
 
 export const Navbar01 = React.forwardRef<HTMLElement, Navbar01Props>(
     (
@@ -104,55 +84,19 @@ export const Navbar01 = React.forwardRef<HTMLElement, Navbar01Props>(
             className,
             logo = <Logo />,
             logoHref = '#',
-            navigationLinks = defaultNavigationLinks,
-            signInText = 'Sign In',
-            signInHref = '#signin',
-            ctaText = 'Get Started',
-            ctaHref = '#get-started',
-            onSignInClick,
-            onCtaClick,
             ...props
         },
         ref
     ) => {
-        const [isMobile, setIsMobile] = useState(false);
-        const containerRef = useRef<HTMLElement>(null);
-
-        useEffect(() => {
-            const checkWidth = () => {
-                if (containerRef.current) {
-                    const width = containerRef.current.offsetWidth;
-                    setIsMobile(width < 768); // 768px is md breakpoint
-                }
-            };
-
-            checkWidth();
-
-            const resizeObserver = new ResizeObserver(checkWidth);
-            if (containerRef.current) {
-                resizeObserver.observe(containerRef.current);
-            }
-
-            return () => {
-                resizeObserver.disconnect();
-            };
-        }, []);
-
-        // Combine refs
-        const combinedRef = React.useCallback((node: HTMLElement | null) => {
-            containerRef.current = node;
-            if (typeof ref === 'function') {
-                ref(node);
-            } else if (ref) {
-                ref.current = node;
-            }
-        }, [ref]);
+        const { setTheme, theme } = useTheme();
+        const isMobile = useMobile();
+        const { isOpen: sidebarOpen, toggle: toggleSidebar } = useSidebar();
 
         return (
             <header
-                ref={combinedRef}
+                ref={ref as React.RefObject<HTMLElement>}
                 className={cn(
-                    'sticky top-0 z-50 w-full border-b border-gray-300 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 [&_*]:no-underline',
+                    'sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 [&_*]:no-underline',
                     className
                 )}
                 {...props}
@@ -160,42 +104,24 @@ export const Navbar01 = React.forwardRef<HTMLElement, Navbar01Props>(
                 <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between gap-4">
                     {/* Left side */}
                     <div className="flex items-center gap-2">
-                        {/* Mobile menu trigger */}
+                        {/* Mobile hamburger left of logo */}
                         {isMobile && (
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        className="group h-9 w-9 hover:bg-accent hover:text-accent-foreground"
-                                        variant="ghost"
-                                        size="icon"
-                                    >
-                                        <HamburgerIcon />
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent align="start" className="w-48 p-2">
-                                    <NavigationMenu className="max-w-none">
-                                        <NavigationMenuList className="flex-col items-start gap-1">
-                                            {navigationLinks.map((link, index) => (
-                                                <NavigationMenuItem key={index} className="w-full">
-                                                    <button
-                                                        onClick={(e) => e.preventDefault()}
-                                                        className={cn(
-                                                            "flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer no-underline",
-                                                            link.active
-                                                                ? "bg-accent text-accent-foreground"
-                                                                : "text-foreground/80"
-                                                        )}
-                                                    >
-                                                        {link.label}
-                                                    </button>
-                                                </NavigationMenuItem>
-                                            ))}
-                                        </NavigationMenuList>
-                                    </NavigationMenu>
-                                </PopoverContent>
-                            </Popover>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                aria-expanded={sidebarOpen}
+                                aria-label="Toggle menu"
+                                onClick={toggleSidebar}
+                                className={cn(
+                                    'group mr-1 transition-opacity duration-200',
+                                    sidebarOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                                )}
+                            >
+                                <HamburgerIcon className="h-5 w-5" />
+                            </Button>
                         )}
-                        {/* Main nav */}
+
+                        {/* Logo */}
                         <div className="flex items-center gap-6">
                             <button
                                 onClick={(e) => e.preventDefault()}
@@ -204,55 +130,54 @@ export const Navbar01 = React.forwardRef<HTMLElement, Navbar01Props>(
                                 <div className="text-2xl">
                                     {logo}
                                 </div>
-                                <span className="hidden font-bold text-xl sm:inline-block">shadcn.io</span>
+                                <span className="hidden font-bold text-xl sm:inline-block">yapper</span>
                             </button>
-                            {/* Navigation menu */}
-                            {!isMobile && (
-                                <NavigationMenu className="flex">
-                                    <NavigationMenuList className="gap-1">
-                                        {navigationLinks.map((link, index) => (
-                                            <NavigationMenuItem key={index}>
-                                                <button
-                                                    onClick={(e) => e.preventDefault()}
-                                                    className={cn(
-                                                        "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer no-underline",
-                                                        link.active
-                                                            ? "bg-accent text-accent-foreground"
-                                                            : "text-foreground/80 hover:text-foreground"
-                                                    )}
-                                                >
-                                                    {link.label}
-                                                </button>
-                                            </NavigationMenuItem>
-                                        ))}
-                                    </NavigationMenuList>
-                                </NavigationMenu>
-                            )}
                         </div>
                     </div>
                     {/* Right side */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center space-x-2">
+                        {/* Theme toggle */}
                         <Button
                             variant="ghost"
-                            size="sm"
-                            className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                if (onSignInClick) onSignInClick();
-                            }}
+                            size="icon"
+                            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
                         >
-                            {signInText}
+                            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                            <span className="sr-only">Toggle theme</span>
                         </Button>
-                        <Button
-                            size="sm"
-                            className="text-sm font-medium px-4 h-9 rounded-md shadow-sm"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                if (onCtaClick) onCtaClick();
-                            }}
-                        >
-                            {ctaText}
-                        </Button>
+
+                        {/* User dropdown */}
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                                    <Avatar className="h-8 w-8">
+                                        <AvatarImage src="/diverse-user-avatars.png" alt="User" />
+                                        <AvatarFallback>JD</AvatarFallback>
+                                    </Avatar>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-56" align="end" forceMount>
+                                <DropdownMenuLabel className="font-normal">
+                                    <div className="flex flex-col space-y-1">
+                                        <p className="text-sm font-medium leading-none">John Doe</p>
+                                        <p className="text-xs leading-none text-muted-foreground">john.doe@example.com</p>
+                                    </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                    <User className="mr-2 h-4 w-4" />
+                                    <span>Profile</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <span>Settings</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                    <span>Log out</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
             </header>

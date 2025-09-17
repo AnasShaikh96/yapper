@@ -2,26 +2,25 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import { Navbar } from "./navbar-layout"
+import { useEffect } from "react"
 import { Sidebar } from "./sidebar"
 import { useMobile } from "@/hooks/use-mobile"
+// Removed mobile toggle row; keeping imports clean
+import { useSidebar } from "@/components/ui/sidebar-context"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { isOpen: sidebarOpen, close: closeSidebar, setOpen } = useSidebar()
   const isMobile = useMobile()
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen)
-  }
-
-  const closeSidebar = () => {
-    setSidebarOpen(false)
-  }
+  // Ensure sidebar default states per device
+  useEffect(() => {
+    // Mobile default closed, Desktop default open
+    setOpen(!isMobile)
+  }, [isMobile, setOpen])
 
   return (
     <div className="flex h-screen bg-background">
@@ -30,11 +29,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Main content area */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Navbar */}
-        <Navbar onMenuClick={toggleSidebar} isMobile={isMobile} />
-
+        {/* Mobile toggle row removed; handled in Navbar */}
+        
         {/* Page content */}
-        <main className="flex-1 overflow-auto p-6">{children}</main>
+        <main className="flex-1 overflow-auto">
+          <div className="p-6">{children}</div>
+        </main>
       </div>
     </div>
   )

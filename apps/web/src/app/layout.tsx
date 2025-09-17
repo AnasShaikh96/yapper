@@ -1,4 +1,6 @@
 import { Navbar01 } from '@/components/ui/navbar';
+import { ThemeProvider } from '@/components/ui/theme-provider';
+import { SidebarProvider } from '@/components/ui/sidebar-context';
 import './global.css';
 
 export const metadata = {
@@ -14,8 +16,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navbar01 />
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <SidebarProvider>
+            <Navbar01 />
+            {children}
+          </SidebarProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
