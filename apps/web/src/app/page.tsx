@@ -1,6 +1,6 @@
 'use client';
 
-import { $getRoot, $getSelection, EditorState } from 'lexical';
+import { EditorState } from 'lexical';
 import { useEffect, useState } from 'react';
 
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
@@ -10,10 +10,8 @@ import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-
-// import {useLexicalComposerContext} from '@lexical/react/useconetex÷'
-
-
+import { Button } from '@/components/ui/button';
+import { DashboardLayout } from '@/components/ui/dashboard-layout';
 
 const theme = {
   // Theme styling goes here
@@ -31,9 +29,7 @@ export default function Index() {
 
 
   const [editorState, setEditorState] = useState<any>();
-  // function onChange(editorState) {
-  //   setEditorState(editorState);
-  // }
+  console.log("editorState", editorState)
 
   function onChange(editorState: EditorState) {
     // Call toJSON on the EditorState object, which produces a serialization safe string
@@ -54,27 +50,30 @@ export default function Index() {
    * Note: The corresponding styles are in the ./index.tailwind file.
    */
   return (
-    <div>
-      <LexicalComposer initialConfig={initialConfig}>
-        <RichTextPlugin
-          contentEditable={
-            <ContentEditable
-              aria-placeholder={'Enter some text...'}
-              placeholder={<div>Enter some text...</div>}
-            />
-          }
-          ErrorBoundary={LexicalErrorBoundary}
-        />
-        <HistoryPlugin />
-        <AutoFocusPlugin />
-        <MyOnChangePlugin onChange={onChange} />
-      </LexicalComposer>
-    </div>
+    <DashboardLayout>
+      <div>
+        <Button>Hello</Button>
+        <LexicalComposer initialConfig={initialConfig}>
+          <RichTextPlugin
+            contentEditable={
+              <ContentEditable
+                aria-placeholder={'Enter some text...'}
+                placeholder={<div>Enter some text...</div>}
+              />
+            }
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+          <HistoryPlugin />
+          <AutoFocusPlugin />
+          <MyOnChangePlugin onChange={onChange} />
+        </LexicalComposer>
+      </div>
+    </DashboardLayout>
   );
 }
 
 
-function MyOnChangePlugin({ onChange }: { onChange: React.ChangeEvent<HTMLElement> }) {
+function MyOnChangePlugin({ onChange }: { onChange: (editorState: EditorState) => void }) {
   // Access the editor through the LexicalComposerContext
   const [editor] = useLexicalComposerContext();
   // Wrap our listener in useEffect to handle the teardown and avoid stale references.
