@@ -50,17 +50,22 @@ export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
     if (isMobile) {
         return (
             <>
-                {/* Mobile overlay */}
-                {isOpen && <div className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden" onClick={onClose} />}
+                {/* Mobile overlay (starts below navbar) */}
+                {isOpen && (
+                    <div
+                        className="fixed inset-x-0 top-16 bottom-0 z-30 bg-background/80 backdrop-blur-sm md:hidden"
+                        onClick={onClose}
+                    />
+                )}
 
-                {/* Mobile sidebar */}
+                {/* Mobile sidebar (starts below navbar) */}
                 <aside
                     className={cn(
-                        "fixed left-0 top-0 z-50 h-full w-64 transform bg-sidebar border-r border-gray-300 transition-transform duration-300 ease-in-out md:hidden",
+                        "fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] w-64 transform bg-sidebar border-r transition-transform duration-300 ease-in-out md:hidden",
                         isOpen ? "translate-x-0" : "-translate-x-full",
                     )}
                 >
-                    <div className="flex h-16 items-center justify-between px-4 border-b border-gray-300">
+                    <div className="flex h-16 items-center justify-between px-4 border-b">
                         <span className="text-lg font-semibold text-sidebar-foreground">Menu</span>
                         <Button variant="ghost" size="icon" onClick={onClose}>
                             <X className="h-5 w-5" />
@@ -86,24 +91,23 @@ export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
         )
     }
 
-    // Desktop sidebar
+    // Desktop sidebar (sticky below navbar, independent from page scroll)
     return (
         <aside
             className={cn(
-                "hidden md:flex h-full bg-sidebar border-r border-gray-300 transition-all duration-300 ease-in-out",
+                "hidden md:flex md:sticky md:top-16 md:h-[calc(100vh-4rem)] bg-sidebar border-r transition-all duration-300 ease-in-out",
                 isCollapsed ? "w-16" : "w-64",
             )}
         >
             <div className="flex flex-col w-full">
-                {/* Collapse toggle */}
-                <div className="flex h-16 items-center justify-end px-4 border-b border-gray-300">
-                    <Button variant="ghost" size="icon" onClick={toggleCollapsed} className="h-8 w-8">
-                        {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-                    </Button>
-                </div>
-
                 {/* Navigation */}
                 <ScrollArea className="flex-1 px-3 py-4">
+                    {/* Small inline collapse toggle placed above the first cell */}
+                    <div className="mb-2 flex items-center justify-end">
+                        <Button variant="ghost" size="icon" onClick={toggleCollapsed} className="h-8 w-8">
+                            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+                        </Button>
+                    </div>
                     <nav className="space-y-2">
                         {sidebarItems.map((item) => (
                             <a
