@@ -30,10 +30,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main content area */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Mobile toggle row removed; handled in Navbar */}
-        
+
         {/* Page content */}
         <main className="flex-1 overflow-auto">
-          <div className="p-6">{children}</div>
+          <div >{children}</div>
         </main>
       </div>
     </div>
