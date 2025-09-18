@@ -1,5 +1,7 @@
 import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs'
+import { Button } from './button'
+import { X } from 'lucide-react'
 
 const YapLayout = () => {
     const yapArray = [
@@ -26,7 +28,12 @@ const YapLayout = () => {
     return (
         <Tabs defaultValue={yapArray[0].value} className="w-full">
             <TabsList className='rounded-none'>
-                {yapArray.map(item => <TabsTrigger key={item.id} value={item.value}>{item.title}</TabsTrigger>)}
+                {yapArray.map(item => <TabsTrigger key={item.id} value={item.value}>
+                    {item.title}
+
+                    <Button variant={'ghost'} size={'icon'} ><X className="h-5 w-5" />
+                    </Button>
+                </TabsTrigger>)}
             </TabsList>
             {yapArray.map(item => <TabsContent key={item.id} value={item.value}>{item.content}</TabsContent>)}
         </Tabs>
