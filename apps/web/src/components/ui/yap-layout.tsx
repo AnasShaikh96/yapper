@@ -2,6 +2,7 @@ import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs'
 import { Button } from './button'
 import { X } from 'lucide-react'
+import YapDocComponent from './yap-doc'
 
 const YapLayout = () => {
     const yapArray = [
@@ -35,7 +36,10 @@ const YapLayout = () => {
                     </Button>
                 </TabsTrigger>)}
             </TabsList>
-            {yapArray.map(item => <TabsContent key={item.id} value={item.value}>{item.content}</TabsContent>)}
+            {yapArray.map(item => <TabsContent key={item.id} value={item.value}>
+                <YapDocComponent content={item.content} />
+            </TabsContent>
+            )}
         </Tabs>
 
     )

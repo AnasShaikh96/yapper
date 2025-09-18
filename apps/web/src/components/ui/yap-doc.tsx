@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
@@ -28,10 +29,13 @@ function onError(error: Error) {
 
 
 
-const YapDocComponent = () => {
+const YapDocComponent = ({ content }: { content: string }) => {
 
-    const [editorState, setEditorState] = useState<any>();
-    console.log("editorState", editorState)
+
+
+    const [editorState, setEditorState] = useState<string>();
+
+    console.log(content, editorState)
 
     function onChange(editorState: EditorState) {
         // Call toJSON on the EditorState object, which produces a serialization safe string
@@ -40,9 +44,13 @@ const YapDocComponent = () => {
         setEditorState(JSON.stringify(editorStateJSON));
     }
 
+
+    // 'empty' editor
+    const value = `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"${content}","type":"text","version":1}],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""}],"direction":null,"format":"","indent":0,"type":"root","version":1}}`;
     const initialConfig = {
         namespace: 'MyEditor',
         theme,
+        editorState: value,
         onError,
     };
 
@@ -52,8 +60,8 @@ const YapDocComponent = () => {
             <RichTextPlugin
                 contentEditable={
                     <ContentEditable
-                        aria-placeholder={'Enter some text...'}
-                        placeholder={<div>Enter some text...</div>}
+                    aria-placeholder={'Enter some text...'}
+                    placeholder={<div>Enter Some text...</div>}
                     />
                 }
                 ErrorBoundary={LexicalErrorBoundary}
