@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
@@ -13,6 +13,9 @@ import { useEffect, useState } from 'react';
 
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { YapObject } from '@/lib/type';
+import { initialEditorValue } from '@/lib/constants';
+import useDebounce from '@/hooks/useDebounce';
 
 
 const theme = {
@@ -29,28 +32,50 @@ function onError(error: Error) {
 
 
 
-const YapDocComponent = ({ content }: { content: string }) => {
+const YapDocComponent = ({ content, setYapData, yapData }: { content: YapObject | undefined, setYapData: React.Dispatch<React.SetStateAction<YapObject[]>>, yapData: YapObject[] }) => {
 
 
 
-    const [editorState, setEditorState] = useState<string>();
+    const [editorState, setEditorState] = useState<EditorState | string>();
 
-    console.log(content, editorState)
+    // const debouncedState = useDebounce(editorState)
+
+    console.log("editorState", editorState,)
+
+    useEffect(() => {
+
+
+
+        if (content?.content !== undefined) {
+
+            const newArr = [...yapData];
+            const contentById = yapData.findIndex(item => item.id === content.id);
+
+            newArr[contentById] = {
+                ...content,
+                content: editorState
+            }
+
+            setYapData(newArr)
+        }
+    }, [editorState])
+
+
 
     function onChange(editorState: EditorState) {
         // Call toJSON on the EditorState object, which produces a serialization safe string
         const editorStateJSON = editorState.toJSON();
         // However, we still have a JavaScript object, so we need to convert it to an actual string with JSON.stringify
         setEditorState(JSON.stringify(editorStateJSON));
+        // setYapData([])
     }
 
 
-    // 'empty' editor
-    const value = `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"${content}","type":"text","version":1}],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""}],"direction":null,"format":"","indent":0,"type":"root","version":1}}`;
     const initialConfig = {
         namespace: 'MyEditor',
         theme,
-        editorState: value,
+        editorState: content?.content,
+        // editorState:  '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"aaaaa","type":"text","version":1}],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""}],"direction":null,"format":"","indent":0,"type":"root","version":1}}',
         onError,
     };
 
