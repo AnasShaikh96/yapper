@@ -57,18 +57,20 @@ const YapDocComponent = ({ content }: { content: string }) => {
 
     return (
         <LexicalComposer initialConfig={initialConfig}>
-            <RichTextPlugin
-                contentEditable={
-                    <ContentEditable
-                    aria-placeholder={'Enter some text...'}
-                    placeholder={<div>Enter Some text...</div>}
-                    />
-                }
-                ErrorBoundary={LexicalErrorBoundary}
-            />
-            <HistoryPlugin />
-            <AutoFocusPlugin />
-            <MyOnChangePlugin onChange={onChange} />
+            <div style={{ height: 'calc(100vh - 110px)', overflowY: 'auto', border: '1px solid #ccc' }}>
+                <RichTextPlugin
+                    contentEditable={
+                        <ContentEditable
+                            aria-placeholder={'Enter some text...'}
+                            placeholder={<div>Enter Some text...</div>}
+                        />
+                    }
+                    ErrorBoundary={LexicalErrorBoundary}
+                />
+                <HistoryPlugin />
+                <AutoFocusPlugin />
+                <MyOnChangePlugin onChange={onChange} />
+            </div>
         </LexicalComposer>
 
     )

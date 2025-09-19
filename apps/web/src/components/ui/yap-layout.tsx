@@ -36,9 +36,11 @@ const YapLayout = () => {
                     </Button>
                 </TabsTrigger>)}
             </TabsList>
-            {yapArray.map(item => <TabsContent key={item.id} value={item.value}>
-                <YapDocComponent content={item.content} />
-            </TabsContent>
+            {yapArray.map(item => (
+                <TabsContent key={item.id} value={item.value}>
+                    <YapDocComponent content={item.content} />
+                </TabsContent>
+            )
             )}
         </Tabs>
 
