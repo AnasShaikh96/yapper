@@ -18,26 +18,26 @@ const sidebarItems = [
         icon: Home,
         href: "/",
     },
-    {
-        title: "Users",
-        icon: Users,
-        href: "/users",
-    },
-    {
-        title: "Analytics",
-        icon: BarChart3,
-        href: "/analytics",
-    },
+    // {
+    //     title: "Users",
+    //     icon: Users,
+    //     href: "/users",
+    // },
+    // {
+    //     title: "Analytics",
+    //     icon: BarChart3,
+    //     href: "/analytics",
+    // },
     {
         title: "Reports",
         icon: FileText,
         href: "/reports",
     },
-    {
-        title: "Settings",
-        icon: Settings,
-        href: "/settings",
-    },
+    // {
+    //     title: "Settings",
+    //     icon: Settings,
+    //     href: "/settings",
+    // },
 ]
 
 export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
