@@ -1,8 +1,14 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs'
 import { Button } from './button'
-import { X } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
 import YapDocComponent from './yap-doc'
+import { YapObject } from '@/lib/type'
+import { initialEditorValue } from '@/lib/constants'
+
+
+
 
 const YapLayout = () => {
     const yapArray = [
@@ -26,20 +32,49 @@ const YapLayout = () => {
         }
     ]
 
+    const [yapData, setYapData] = useState<YapObject[]>([])
+    const [selectedYap, setSelectedYap] = useState<YapObject>()
+
+    console.log("yapData", yapData, selectedYap)
+
+
+    const handleClick = () => {
+        setYapData([...yapData, {
+            id: yapData.length,
+            title: `Untitled ${yapData.length}`,
+            value: `${yapData.length}`,
+            content: initialEditorValue
+        }])
+    }
+
     return (
-        <Tabs defaultValue={yapArray[0].value} className="w-full">
+        <Tabs defaultValue={yapData[0]?.value ?? null} className="w-full">
             <TabsList className='rounded-none'>
-                {yapArray.map(item => <TabsTrigger key={item.id} value={item.value}>
+                {yapData.map(item => <TabsTrigger key={item.id} value={item.value} onClick={() => setSelectedYap(item)}>
                     {item.title}
 
-                    <Button variant={'ghost'} size={'icon'} ><X className="h-5 w-5" />
-                    </Button>
+
                 </TabsTrigger>)}
+
+                <Button variant={'ghost'} size={'icon'}
+                    onClick={() => handleClick()}
+                ><Plus className="h-5 w-5" />
+                </Button>
             </TabsList>
-            {yapArray.map(item => <TabsContent key={item.id} value={item.value}>
-                <YapDocComponent content={item.content} />
-            </TabsContent>
-            )}
+
+
+
+            {selectedYap &&
+                <TabsContent key={selectedYap.id} value={selectedYap.value}>
+                    <YapDocComponent content={selectedYap} setYapData={setYapData} yapData={yapData} />
+                </TabsContent>
+            }
+            {/* {yapData.map(item => (
+                <TabsContent key={item.id} value={item.value}>
+                    <YapDocComponent content={item} setYapData={setYapData} />
+                </TabsContent>
+            )
+            )} */}
         </Tabs>
 
     )

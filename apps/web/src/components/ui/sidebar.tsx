@@ -95,7 +95,7 @@ export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
     return (
         <aside
             className={cn(
-                "hidden md:flex md:sticky md:top-16 md:h-[calc(100vh-4rem)] bg-sidebar border-r transition-all duration-300 ease-in-out",
+                "hidden md:flex md:sticky md:top-16 md:h-[calc(100vh-65px)] bg-sidebar border-r transition-all duration-300 ease-in-out",
                 isCollapsed ? "w-16" : "w-64",
             )}
         >

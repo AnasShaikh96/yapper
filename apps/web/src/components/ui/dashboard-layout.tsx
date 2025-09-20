@@ -23,7 +23,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }, [isMobile, setOpen])
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex  bg-background">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} isMobile={isMobile} />
 
@@ -32,7 +32,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Mobile toggle row removed; handled in Navbar */}
 
         {/* Page content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1">
           <div >{children}</div>
         </main>
       </div>
