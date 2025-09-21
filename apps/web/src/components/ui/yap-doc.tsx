@@ -1,5 +1,5 @@
 'use client'
-import React, { useMemo } from 'react'
+import React from 'react'
 
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
@@ -14,8 +14,6 @@ import { useEffect, useState } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { YapObject } from '@/lib/type';
-import { initialEditorValue } from '@/lib/constants';
-import useDebounce from '@/hooks/useDebounce';
 
 
 const theme = {
@@ -34,14 +32,7 @@ function onError(error: Error) {
 
 const YapDocComponent = ({ content, setYapData, yapData }: { content: YapObject | undefined, setYapData: React.Dispatch<React.SetStateAction<YapObject[]>>, yapData: YapObject[] }) => {
 
-
-
     const [editorState, setEditorState] = useState<EditorState | string>();
-
-    // const debouncedState = useDebounce(editorState)
-
-    console.log("editorState", editorState,)
-
     useEffect(() => {
 
 
@@ -67,7 +58,6 @@ const YapDocComponent = ({ content, setYapData, yapData }: { content: YapObject 
         const editorStateJSON = editorState.toJSON();
         // However, we still have a JavaScript object, so we need to convert it to an actual string with JSON.stringify
         setEditorState(JSON.stringify(editorStateJSON));
-        // setYapData([])
     }
 
 
@@ -75,7 +65,6 @@ const YapDocComponent = ({ content, setYapData, yapData }: { content: YapObject 
         namespace: 'MyEditor',
         theme,
         editorState: content?.content,
-        // editorState:  '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"aaaaa","type":"text","version":1}],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""}],"direction":null,"format":"","indent":0,"type":"root","version":1}}',
         onError,
     };
 

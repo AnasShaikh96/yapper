@@ -2,6 +2,7 @@ import { Navbar01 } from '@/components/ui/navbar';
 import { ThemeProvider } from '@/components/ui/theme-provider';
 import { SidebarProvider } from '@/components/ui/sidebar-context';
 import './global.css';
+import { DashboardLayout } from '@/components/ui/dashboard-layout';
 
 export const metadata = {
   title: 'Welcome to ',
@@ -19,7 +20,9 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SidebarProvider>
             <Navbar01 />
-            {children}
+            <DashboardLayout>
+              {children}
+            </DashboardLayout>
           </SidebarProvider>
         </ThemeProvider>
       </body>
