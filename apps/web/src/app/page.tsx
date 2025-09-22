@@ -1,4 +1,4 @@
-import YapLayout from '@/components/ui/yap-layout';
+import YapLayout from '@/components/shared/yap-layout';
 
 export default function Index() {
   return (
