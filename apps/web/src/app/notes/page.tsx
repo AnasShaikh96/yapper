@@ -1,13 +1,16 @@
 'use client'
 import { DialogEditor } from '@/components/shared/dialog-editor'
 import NotesCard from '@/components/shared/notes-card'
+import YapEditor from '@/components/shared/yap-editor'
 import { Button } from '@/components/ui/button'
-import { tempArr } from '@/lib/constants'
+import { initialEditorValue, tempArr } from '@/lib/constants'
+import { EditorState } from 'lexical'
 import { ExternalLinkIcon, EyeIcon } from 'lucide-react'
 import React, { useState } from 'react'
 
 const Page = () => {
   const [open, setOpen] = useState(false);
+  const [editorState, setEditorState] = useState<EditorState | string>();
 
   return (
     <div className="column-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 mx-8 mt-3 hover:cursor-pointer">
@@ -20,7 +23,9 @@ const Page = () => {
           <NotesCard item={item} className={"group-hover:blur-md"} />
         </div>
       ))}
-      <DialogEditor open={open} setOpen={setOpen} />
+      <DialogEditor open={open} setOpen={setOpen} >
+        <YapEditor editorState={editorState} setEditorState={setEditorState} initialEditorStates={initialEditorValue} editorStyles={{ height:'calc(100vh - 200px)', overflowY: 'auto', border: '1px solid #ccc' }} />
+      </DialogEditor>
     </div>
   )
 }

@@ -9,11 +9,10 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 
 import { EditorState } from 'lexical';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { YapObject } from '@/lib/type';
 
 
 const theme = {
