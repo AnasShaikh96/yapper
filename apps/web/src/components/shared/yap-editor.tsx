@@ -9,11 +9,10 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 
 import { EditorState } from 'lexical';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { YapObject } from '@/lib/type';
 
 
 const theme = {
@@ -29,29 +28,18 @@ function onError(error: Error) {
 }
 
 
-
-const YapDocComponent = ({ content, setYapData, yapData }: { content: YapObject | undefined, setYapData: React.Dispatch<React.SetStateAction<YapObject[]>>, yapData: YapObject[] }) => {
-
-    const [editorState, setEditorState] = useState<EditorState | string>();
-    useEffect(() => {
-
-
-
-        if (content?.content !== undefined) {
-
-            const newArr = [...yapData];
-            const contentById = yapData.findIndex(item => item.id === content.id);
-
-            newArr[contentById] = {
-                ...content,
-                content: editorState
-            }
-
-            setYapData(newArr)
-        }
-    }, [editorState])
+interface YapEditorProps {
+    editorState?: any,
+    setEditorState: any,
+    initialEditorStates: any
+    editorStyles?: any
+    // content: YapObject | undefined,
+    // setYapData: React.Dispatch<React.SetStateAction<YapObject[]>>,
+    // yapData: YapObject[]
+}
 
 
+const YapEditor = ({ setEditorState, initialEditorStates, editorStyles }: YapEditorProps) => {
 
     function onChange(editorState: EditorState) {
         // Call toJSON on the EditorState object, which produces a serialization safe string
@@ -63,15 +51,16 @@ const YapDocComponent = ({ content, setYapData, yapData }: { content: YapObject 
 
     const initialConfig = {
         namespace: 'MyEditor',
+        editorState: initialEditorStates,
         theme,
-        editorState: content?.content,
         onError,
+
     };
 
 
     return (
         <LexicalComposer initialConfig={initialConfig}>
-            <div style={{ height: 'calc(100vh - 110px)', overflowY: 'auto', border: '1px solid #ccc' }}>
+            <div style={editorStyles}>
                 <RichTextPlugin
                     contentEditable={
                         <ContentEditable
@@ -90,7 +79,7 @@ const YapDocComponent = ({ content, setYapData, yapData }: { content: YapObject 
     )
 }
 
-export default YapDocComponent
+export default YapEditor
 
 
 function MyOnChangePlugin({ onChange }: { onChange: (editorState: EditorState) => void }) {
