@@ -1,8 +1,5 @@
-import { Navbar01 } from '@/components/ui/navbar';
-import { ThemeProvider } from '@/components/ui/theme-provider';
-import { SidebarProvider } from '@/components/ui/sidebar-context';
 import './global.css';
-import { DashboardLayout } from '@/components/ui/dashboard-layout';
+import BodyLayout from '@/components/shared/body-layout';
 
 export const metadata = {
   title: 'Yapper',
@@ -17,14 +14,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <SidebarProvider>
-            <Navbar01 />
-            <DashboardLayout>
-              {children}
-            </DashboardLayout>
-          </SidebarProvider>
-        </ThemeProvider>
+        <BodyLayout>
+          {children}
+        </BodyLayout>
       </body>
     </html>
   );
