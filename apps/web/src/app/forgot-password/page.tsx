@@ -25,6 +25,8 @@ import { Input } from '@/components/ui/input'
 
 import { emailSchema } from '@/lib/validation-schemas'
 import { GalleryVerticalEnd } from 'lucide-react'
+import { verifyUser } from '@/lib/api'
+import { useRouter } from 'next/navigation'
 
 // Schema for email validation
 const formSchema = z.object({
@@ -32,6 +34,7 @@ const formSchema = z.object({
 })
 
 export default function ForgetPasswordPreview() {
+  const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,9 +44,9 @@ export default function ForgetPasswordPreview() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      // Assuming a function to send reset email
-      console.log(values)
-      toast.success('Password reset email sent. Please check your inbox.')
+      await verifyUser(values)
+      toast.success('Verification email sent. Check your inbox for the reset link.')
+      router.replace(`/reset-password?email=${encodeURIComponent(values.email)}`)
     } catch (error) {
       console.error('Error sending password reset email', error)
       toast.error('Failed to send password reset email. Please try again.')
@@ -91,8 +94,8 @@ export default function ForgetPasswordPreview() {
                         </FormItem>
                       )}
                     />
-                    <Button type="submit" className="w-full">
-                      Send Reset Link
+                    <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                      {form.formState.isSubmitting ? 'Sending...' : 'Send Reset Link'}
                     </Button>
                   </div>
                 </form>

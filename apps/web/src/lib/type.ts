@@ -32,3 +32,22 @@ export type RegisterResponse = {
     message: string
     data?: unknown
 }
+
+export type VerifyUserPayload = {
+    email: string
+}
+
+export type VerifyUserResponse = {
+    status: number
+    message: string
+}
+
+export type ResetPasswordPayload = {
+    email: string
+    password: string
+}
+
+export type ResetPasswordResponse = {
+    status: number
+    message: string
+}

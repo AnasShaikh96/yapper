@@ -1,4 +1,4 @@
-import { LoginPayload, LoginResponse, RegisterPayload, RegisterResponse } from "./type"
+import { LoginPayload, LoginResponse, RegisterPayload, RegisterResponse, VerifyUserPayload, VerifyUserResponse, ResetPasswordPayload, ResetPasswordResponse } from "./type"
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3333'
 
@@ -39,4 +39,18 @@ export async function register(payload: RegisterPayload) {
 		method: 'POST',
 		body: JSON.stringify(payload),
 	})
+}
+
+export async function verifyUser(payload: VerifyUserPayload) {
+    return request<VerifyUserResponse>('/verify-user', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    })
+}
+
+export async function resetPassword(payload: ResetPasswordPayload) {
+    return request<ResetPasswordResponse>('/reset-password', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    })
 }
