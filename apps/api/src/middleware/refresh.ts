@@ -45,6 +45,9 @@ export const verifyRefreshToken = async (req: Request, res: Response, next: Next
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (req as any).user = user;
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (req as any).rotatedTokens = { accessToken, refreshToken: rotatedRefreshToken };
+
             return next();
         });
 

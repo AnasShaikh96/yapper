@@ -39,6 +39,21 @@ export const registerFormSchema = z
     message: 'Passwords do not match',
   })
 
+export const profileFormSchema = z
+  .object({
+    username: usernameSchema.optional(),
+    email: emailSchema.optional(),
+    password: z.string().optional(),
+    confirmPassword: z.string().optional(),
+  })
+  .refine((data) => {
+    if (!data.password && !data.confirmPassword) return true
+    return data.password === data.confirmPassword
+  }, {
+    path: ['confirmPassword'],
+    message: 'Passwords do not match',
+  })
+
 export const resetPasswordFormSchema = z
   .object({
     email: emailSchema,

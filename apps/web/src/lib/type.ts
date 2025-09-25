@@ -33,6 +33,30 @@ export type RegisterResponse = {
     data?: unknown
 }
 
+export type ProfileUser = {
+    id: string
+    username: string
+    email: string | null
+}
+
+export type GetProfileResponse = {
+    status: number
+    message: string
+    data: ProfileUser[] | ProfileUser | null
+}
+
+export type UpdateProfilePayload = {
+    username?: string
+    email?: string
+    password?: string
+}
+
+export type UpdateProfileResponse = {
+    status: number
+    message: string
+    data?: unknown
+}
+
 export type VerifyUserPayload = {
     email: string
 }

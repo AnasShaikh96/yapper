@@ -28,7 +28,7 @@ import { PasswordInput } from '@/components/ui/password-input'
 
 import { loginFormSchema } from '@/lib/validation-schemas'
 import { GalleryVerticalEnd } from 'lucide-react'
-import { login } from '@/lib/api'
+import { login, setAccessToken } from '@/lib/api'
 
 const formSchema = loginFormSchema
 
@@ -45,6 +45,9 @@ export default function LoginPreview() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const res = await login(values)
+      if (res.accessToken) {
+        setAccessToken(res.accessToken)
+      }
       toast.success(res.message || 'Logged in successfully')
       router.replace('/notes')
     } catch (error: any) {
