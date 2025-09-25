@@ -9,20 +9,20 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-export function DialogEditor({ open, setOpen }: { open: boolean, setOpen: (open: boolean) => void }) {
+export function DialogEditor({ open, setOpen, children }: { open: boolean, setOpen: any, children: React.ReactNode }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <form>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] md:max-w-[625px]">
           <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
+            <DialogTitle></DialogTitle>
             <DialogDescription>
               Make changes to your profile here. Click save when you&apos;re
               done.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
-
+            {children}
           </div>
           <DialogFooter>
             <DialogClose asChild>

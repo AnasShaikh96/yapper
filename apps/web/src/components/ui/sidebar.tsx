@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Home, BarChart3, FileText, ChevronLeft, ChevronRight, X } from "lucide-react"
+import { FileText, ChevronLeft, ChevronRight, X, PenBoxIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -13,20 +13,25 @@ interface SidebarProps {
 }
 
 const sidebarItems = [
-    {
-        title: "Home",
-        icon: Home,
-        href: "/",
-    },
-    {
-        title: "Dashboard",
-        icon: BarChart3,
-        href: "/dashboard",
-    },
+    // {
+    //     title: "Home",
+    //     icon: Home,
+    //     href: "/",
+    // },
+    // {
+    //     title: "Dashboard",
+    //     icon: BarChart3,
+    //     href: "/dashboard",
+    // },
     {
         title: "Notes",
         icon: FileText,
         href: "/notes",
+    },
+    {
+        title: "Editor",
+        icon: PenBoxIcon,
+        href: "/editor",
     },
 ]
 

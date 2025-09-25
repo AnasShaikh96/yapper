@@ -169,9 +169,9 @@ export const Navbar01 = React.forwardRef<HTMLElement, Navbar01Props>(
                                     <User className="mr-2 h-4 w-4" />
                                     <span>Profile</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                {/* <DropdownMenuItem>
                                     <span>Settings</span>
-                                </DropdownMenuItem>
+                                </DropdownMenuItem> */}
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem>
                                     <span>Log out</span>
