@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-export function DialogEditor({ open, setOpen }: { open: boolean, setOpen: any }) {
+export function DialogEditor({ open, setOpen }: { open: boolean, setOpen: (open: boolean) => void }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <form>
