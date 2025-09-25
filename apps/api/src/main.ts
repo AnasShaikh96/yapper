@@ -6,8 +6,7 @@
 import express from 'express';
 import * as path from 'path';
 import cors from "cors"
-import { ApiError, errorHandler } from './utils/ApiError';
-import status from 'http-status';
+import { errorHandler } from './utils/ApiError';
 import cookieParser from 'cookie-parser'
 import userRoutes from './routes/userRoutes';
 import notesRoutes from './routes/notesRoutes';
@@ -18,7 +17,12 @@ const app = express();
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 app.use(express.json())
-app.use(cors())
+app.use(
+  cors({
+    origin: process.env.WEB_ORIGIN || 'http://localhost:3000',
+    credentials: true,
+  })
+)
 app.use(cookieParser())
 
 

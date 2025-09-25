@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 import {
   Form,
@@ -27,10 +28,12 @@ import { PasswordInput } from '@/components/ui/password-input'
 
 import { loginFormSchema } from '@/lib/validation-schemas'
 import { GalleryVerticalEnd } from 'lucide-react'
+import { login } from '@/lib/api'
 
 const formSchema = loginFormSchema
 
 export default function LoginPreview() {
+  const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,16 +44,11 @@ export default function LoginPreview() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      // Assuming an async login function
-      console.log(values)
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
-      )
-    } catch (error) {
-      console.error('Form submission error', error)
-      toast.error('Failed to submit the form. Please try again.')
+      const res = await login(values)
+      toast.success(res.message || 'Logged in successfully')
+      router.replace('/notes')
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to login')
     }
   }
 
@@ -120,8 +118,8 @@ export default function LoginPreview() {
                         </FormItem>
                       )}
                     />
-                    <Button type="submit" className="w-full">
-                      Login
+                    <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                      {form.formState.isSubmitting ? 'Logging in...' : 'Login'}
                     </Button>
                   </div>
                 </form>
