@@ -116,28 +116,6 @@ export default function RegisterPreview() {
                       )}
                     />
 
-                    {/* Phone Field */}
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem className="grid gap-2">
-                          <FormLabel htmlFor="phone">Phone Number</FormLabel>
-                          <FormControl>
-                            {/* <PhoneInput {...field} defaultCountry="TR" /> */}
-                            {/* <Input
-                          id="phone"
-                          placeholder="555-123-4567"
-                          type="tel"
-                          autoComplete="tel"
-                          {...field}
-                        /> */}
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
                     {/* Password Field */}
                     <FormField
                       control={form.control}
@@ -188,7 +166,7 @@ export default function RegisterPreview() {
               </Form>
               <div className="mt-4 text-center text-sm">
                 Already have an account?{' '}
-                <Link href="#" className="underline">
+                <Link href="/login" className="underline">
                   Login
                 </Link>
               </div>

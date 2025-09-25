@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -23,34 +22,31 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/ui/password-input'
 
-import { loginFormSchema } from '@/lib/validation-schemas'
+import { emailSchema } from '@/lib/validation-schemas'
 import { GalleryVerticalEnd } from 'lucide-react'
 
-const formSchema = loginFormSchema
+// Schema for email validation
+const formSchema = z.object({
+  email: emailSchema,
+})
 
-export default function LoginPreview() {
+export default function ForgetPasswordPreview() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
-      password: '',
     },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      // Assuming an async login function
+      // Assuming a function to send reset email
       console.log(values)
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
-      )
+      toast.success('Password reset email sent. Please check your inbox.')
     } catch (error) {
-      console.error('Form submission error', error)
-      toast.error('Failed to submit the form. Please try again.')
+      console.error('Error sending password reset email', error)
+      toast.error('Failed to send password reset email. Please try again.')
     }
   }
 
@@ -63,18 +59,19 @@ export default function LoginPreview() {
           </div>
           Acme Inc.
         </a>
-        <div className="flex flex-col min-h-[50vh] h-full w-full items-center justify-center px-4">
+        <div className="flex min-h-[40vh] h-full w-full items-center justify-center px-4">
           <Card className="mx-auto max-w-sm">
             <CardHeader>
-              <CardTitle className="text-2xl">Login</CardTitle>
+              <CardTitle className="text-2xl">Forgot Password</CardTitle>
               <CardDescription>
-                Enter your email and password to login to your account.
+                Enter your email address to receive a password reset link.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                   <div className="grid gap-4">
+                    {/* Email Field */}
                     <FormField
                       control={form.control}
                       name="email"
@@ -94,49 +91,16 @@ export default function LoginPreview() {
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={form.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem className="grid gap-2">
-                          <div className="flex justify-between items-center">
-                            <FormLabel htmlFor="password">Password</FormLabel>
-                            <Link
-                              href="/forgot-password"
-                              className="ml-auto inline-block text-sm underline"
-                            >
-                              Forgot your password?
-                            </Link>
-                          </div>
-                          <FormControl>
-                            <PasswordInput
-                              id="password"
-                              placeholder="******"
-                              autoComplete="current-password"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                     <Button type="submit" className="w-full">
-                      Login
+                      Send Reset Link
                     </Button>
                   </div>
                 </form>
               </Form>
-              <div className="mt-4 text-center text-sm">
-                Don&apos;t have an account?{' '}
-                <Link href="/sign-up" className="underline">
-                  Sign up
-                </Link>
-              </div>
             </CardContent>
           </Card>
         </div>
       </div>
-    </div>
-
+    </div >
   )
 }
