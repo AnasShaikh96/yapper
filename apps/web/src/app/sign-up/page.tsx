@@ -27,17 +27,19 @@ import { PasswordInput } from '@/components/ui/password-input'
 // import { PhoneInput } from '@/components/ui/phone-input'
 
 import { registerFormSchema } from '@/lib/validation-schemas'
+import { useRouter } from 'next/navigation'
+import { register } from '@/lib/api'
 import { GalleryVerticalEnd } from 'lucide-react'
 
 const formSchema = registerFormSchema
 
 export default function RegisterPreview() {
+  const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
+      username: '',
       email: '',
-      phone: '',
       password: '',
       confirmPassword: '',
     },
@@ -45,16 +47,13 @@ export default function RegisterPreview() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      // Assuming an async registration function
-      console.log(values)
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
-      )
+      const { confirmPassword, ...payload } = values
+      await register(payload)
+      toast.success('Account created successfully')
+      router.replace('/login')
     } catch (error) {
       console.error('Form submission error', error)
-      toast.error('Failed to submit the form. Please try again.')
+      toast.error((error as Error)?.message || 'Failed to create account')
     }
   }
 
@@ -80,15 +79,15 @@ export default function RegisterPreview() {
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                   <div className="grid gap-4">
-                    {/* Name Field */}
+                    {/* Username Field */}
                     <FormField
                       control={form.control}
-                      name="name"
+                      name="username"
                       render={({ field }) => (
                         <FormItem className="grid gap-2">
-                          <FormLabel htmlFor="name">Full Name</FormLabel>
+                          <FormLabel htmlFor="username">Username</FormLabel>
                           <FormControl>
-                            <Input id="name" placeholder="John Doe" {...field} />
+                            <Input id="username" placeholder="johndoe" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -158,8 +157,8 @@ export default function RegisterPreview() {
                       )}
                     />
 
-                    <Button type="submit" className="w-full">
-                      Register
+                    <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                      {form.formState.isSubmitting ? 'Creating account...' : 'Register'}
                     </Button>
                   </div>
                 </form>

@@ -8,14 +8,14 @@ import jwt from 'jsonwebtoken'
 export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { accessToken } = req.cookies;
-        jwt.verify(accessToken, config.jwt_secret, function (err, decoded) {
+        jwt.verify(accessToken, config.jwt_secret, function (err: jwt.VerifyErrors | null, decoded: string | jwt.JwtPayload | undefined) {
             if (err) {
                 res.status(401).json({
                     status: 401,
                     message: 'Auth Token Expired',
                 })
             } else {
-                req.user = decoded
+                (req as any).user = decoded
                 next();
             }
         });

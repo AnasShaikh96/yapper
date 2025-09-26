@@ -3,6 +3,7 @@ import { createUser, deleteUser, getUsers, loginUser, updateUser, updateUserPass
 import { validateBody } from "../utils/validate";
 import { newUserSchema, resetPasswordSchema, verifyTokenSchema, verifyUserSchema } from "../schema/user";
 import { verifyToken } from "../utils/auth";
+import { verifyRefreshToken } from "../middleware/refresh";
 
 
 const router = express.Router();
@@ -19,5 +20,11 @@ router.post('/reset-password', validateBody(resetPasswordSchema), updateUserPass
 
 router.patch('/users', verifyToken, updateUser);
 router.delete('/users', verifyToken, deleteUser);
+
+// refresh access token using refresh token cookie
+router.post('/refresh-token', verifyRefreshToken, (req, res) => {
+  const tokens = (req as any).rotatedTokens
+  return res.status(200).json({ status: 200, message: 'Token refreshed', ...(tokens ?? {}) })
+});
 
 export default router

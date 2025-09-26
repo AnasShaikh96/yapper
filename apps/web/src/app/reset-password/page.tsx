@@ -25,13 +25,19 @@ import { PasswordInput } from '@/components/ui/password-input'
 
 import { resetPasswordFormSchema } from '@/lib/validation-schemas'
 import { GalleryVerticalEnd } from 'lucide-react'
+import { resetPassword } from '@/lib/api'
+import { useSearchParams, useRouter } from 'next/navigation'
 
 const formSchema = resetPasswordFormSchema
 
 export default function ResetPasswordPreview() {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const prefillEmail = searchParams.get('email') || ''
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      email: prefillEmail,
       password: '',
       confirmPassword: '',
     },
@@ -39,11 +45,10 @@ export default function ResetPasswordPreview() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      // Assuming an async reset password function
-      console.log(values)
-      toast.success(
-        'Password reset successful. You can now log in with your new password.',
-      )
+      const { confirmPassword, ...payload } = values
+      await resetPassword(payload)
+      toast.success('Password reset successful. You can now log in with your new password.')
+      router.replace('/login')
     } catch (error) {
       console.error('Error resetting password', error)
       toast.error('Failed to reset the password. Please try again.')
@@ -71,6 +76,14 @@ export default function ResetPasswordPreview() {
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                   <div className="grid gap-4">
+                    {/* Email Field (hidden but present for schema/back-end) */}
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <input type="hidden" {...field} />
+                      )}
+                    />
                     {/* New Password Field */}
                     <FormField
                       control={form.control}
